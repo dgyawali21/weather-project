@@ -35,7 +35,6 @@ function App() {
       <Row>
         <Col>
           <h1>Weather App</h1>
-          <h>hey</h>
         </Col>
       </Row>
       <Row>
