@@ -6,6 +6,7 @@ import Search from "./button.jsx";
 import Alert from "./alert.jsx";
 import Display from "./display.jsx";
 import { fetchWeatherData } from "./apicall.jsx";
+import WeeklyForcast from "./7day.jsx";
 import "./styles.css";
 
 function App() {
