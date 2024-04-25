@@ -1,75 +1,60 @@
-import { useState, React, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Button, Container, Row, Col, Form } from "reactstrap";
-import Zipcode from "./zipcode.jsx";
-import Search from "./button.jsx";
+import { Container, Row, Col } from "reactstrap";
+import Zipcode from "./zipcode";
+import ButtonComponent from "./button"; // Assuming this is your renamed Button file
+import WeeklyForecast from "./WeeklyForecast";
 import Alert from "./alert.jsx";
 import Display from "./display.jsx";
-import { fetchWeatherData } from "./apicall.jsx";
-import WeeklyForecast from "./7day.jsx";
+import { fetchWeatherData } from "./apicall";
+import { fetchDailyWeather } from "./dailyweatherdata";
 import "./styles.css";
 
 function App() {
-  const [usezipcode, Setusezipcode] = useState("");
-  const [weather, Setweather] = useState("");
-  const [dailyalerts, Setdailyalerts] = useState("");
+  const [zipCode, setZipCode] = useState("");
+  const [weather, setWeather] = useState("");
+  const [dailyalerts, setDailyalerts] = useState("");
+  const [weeklyForecast, setWeeklyForecast] = useState([]);
 
-  const handlesubmit = useCallback((e) => {
-    Setusezipcode(e.target.value);
+  const handleZipCodeChange = useCallback((e) => {
+    setZipCode(e.target.value);
   }, []);
 
-  const Handleclick = useCallback(async () => {
-    const weatherData = await fetchWeatherData(usezipcode);
-    Setweather(weatherData);
-    Setdailyalerts(weatherData);
-  }, [usezipcode]);
+  const handleFetchWeather = useCallback(async () => {
+    try {
+      const dailyData = await fetchDailyWeather(zipCode);
+      const forecastData = await fetchWeatherData(zipCode);
+      setWeather(dailyData);
+      setDailyalerts(dailyData);
+      setWeeklyForecast(forecastData);
+    } catch (error) {
+      console.error("Failed to fetch weather data:", error);
+    }
+  }, [zipCode]);
 
-  const Reset = useCallback(() => {
-    Setusezipcode("");
-    Setweather("");
-    Setdailyalerts("");
-  }, []);
-
-  const handleWeeklyForecast = useCallback(async () => {
-    const weeklyZip = document.getElementById("7day").value;
-    setWeeklyZipcode(weeklyZip);
-    const weatherData = await fetchWeatherData(weeklyZip);
-    Setweather(weatherData);
-    Setdailyalerts(weatherData);
+  const handleReset = useCallback(() => {
+    setWeather("");
+    setDailyalerts("");
+    setZipCode("");
+    setWeeklyForecast([]);
   }, []);
 
   return (
     <Container>
       <Row>
         <Col>
-          <h1>Weather App</h1>
+          <h1>7-Day Weather Forecast</h1>
         </Col>
       </Row>
       <Row>
         <Col>
-          <Zipcode
-            name="zipcode"
-            id="zipcode"
-            onChange={handlesubmit}
-            value={usezipcode}
-          />
-        </Col>
-      </Row>
-      <Row>
-      <Col>
-          <Form>
-            <WeeklyForcast onSubmit={handleWeeklyForecast} />
-          </Form>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <Search onClick={Handleclick} />
+          <Zipcode value={zipCode} onChange={handleZipCodeChange} />
         </Col>
         <Col>
-          <Button onClick={Reset} className="button">
-            Reset
-          </Button>
+          <ButtonComponent onClick={handleFetchWeather} />
+        </Col>
+        <Col>
+          <ButtonComponent onClick={handleReset} title="Reset" />
         </Col>
       </Row>
       <Row>
@@ -78,6 +63,11 @@ function App() {
         </Col>
         <Col>
           <Alert dailyalerts={dailyalerts} />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <WeeklyForecast weeklyForecast={weeklyForecast} />
         </Col>
       </Row>
     </Container>

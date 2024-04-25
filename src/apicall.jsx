@@ -1,16 +1,17 @@
-import React from "react";
-
-const API_KEY = "8a095553c8bf3aeb4f9560137c188f16";
+const API_KEY = "1819e5659f324688bb3142417241204";
 
 export async function fetchWeatherData(zipCode) {
   try {
     const response = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?zip=${zipCode}&appid=${API_KEY}&units=metric`,
+      `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${zipCode}&days=7`
     );
-    const data = await response.json();
-    return data;
+    if (!response.ok) {
+      throw new Error('Error fetching weather data');
+    }
+    const forecastData = await response.json();
+    return forecastData.forecast.forecastday; // We are only interested in the forecast days
   } catch (error) {
     console.error("Error fetching data:", error);
-    return null;
+    return []; // Return an empty array on error
   }
 }

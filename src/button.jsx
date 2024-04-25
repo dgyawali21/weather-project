@@ -1,13 +1,14 @@
 import React from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, FormGroup } from "reactstrap";
 
-export default function ButtonComponent({ onClick }) {
+const ButtonComponent = ({ onClick, title }) => {
   return (
     <FormGroup>
       <Button onClick={onClick} className="button">
-        Submit
+        {title || "Submit"}
       </Button>
     </FormGroup>
   );
-}
+};
+
+export default ButtonComponent;
