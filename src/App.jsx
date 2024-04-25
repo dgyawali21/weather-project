@@ -6,7 +6,7 @@ import Search from "./button.jsx";
 import Alert from "./alert.jsx";
 import Display from "./display.jsx";
 import { fetchWeatherData } from "./apicall.jsx";
-import WeeklyForcast from "./7day.jsx";
+import WeeklyForecast from "./7day.jsx";
 import "./styles.css";
 
 function App() {
@@ -30,6 +30,14 @@ function App() {
     Setdailyalerts("");
   }, []);
 
+  const handleWeeklyForecast = useCallback(async () => {
+    const weeklyZip = document.getElementById("7day").value;
+    setWeeklyZipcode(weeklyZip);
+    const weatherData = await fetchWeatherData(weeklyZip);
+    Setweather(weatherData);
+    Setdailyalerts(weatherData);
+  }, []);
+
   return (
     <Container>
       <Row>
@@ -45,6 +53,13 @@ function App() {
             onChange={handlesubmit}
             value={usezipcode}
           />
+        </Col>
+      </Row>
+      <Row>
+      <Col>
+          <Form>
+            <WeeklyForcast onSubmit={handleWeeklyForecast} />
+          </Form>
         </Col>
       </Row>
       <Row>
