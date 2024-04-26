@@ -9,9 +9,9 @@ export async function fetchWeatherData(zipCode) {
       throw new Error('Error fetching weather data');
     }
     const forecastData = await response.json();
-    return forecastData.forecast.forecastday; // We are only interested in the forecast days
+    return forecastData.forecast.forecastday; 
   } catch (error) {
     console.error("Error fetching data:", error);
-    return []; // Return an empty array on error
+    return [];
   }
 }

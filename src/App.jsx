@@ -43,7 +43,7 @@ function App() {
     <Container>
       <Row>
         <Col>
-          <h1>7-Day Weather Forecast</h1>
+          <h1>Weather App</h1>
         </Col>
       </Row>
       <Row>
